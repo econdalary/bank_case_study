@@ -1,0 +1,13 @@
+.idea/
+data/
+venv/
+.DS_Store
+*.py[cod]
+logs/
+*.gzip
+__pycache__/
+*.csv
+*.ipynb_checkpoints/
+*.pdf
+model/
+bank-additional/
