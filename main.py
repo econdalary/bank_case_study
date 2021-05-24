@@ -4,6 +4,7 @@ import warnings
 from pprint import pprint
 
 import pandas as pd
+import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score
@@ -24,7 +25,7 @@ CAT_VARS = ['job', 'marital', 'education', 'default', 'housing', 'loan', 'contac
 NUM_VARS = ['age', 'campaign', 'pdays', 'previous', 'emp.var.rate',
        'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed']
 
-PRED_CUTOFFS = [0.15, 0.25, 0.30, 0.35, 0.40, 0.50]
+PRED_CUTOFFS = list(np.arange(0.2, 0.4, step=0.025))
 
 
 def preprocess_data(df, categorical_cols, numeric_cols):
