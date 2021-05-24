@@ -87,21 +87,22 @@ def main():
     for cutoff in PRED_CUTOFFS:
         preds = {}
         gb_prob = gb.predict_proba(X_test)[:,1]
-        preds["gradient_boost"] = (gb_prob > cutoff).astype("int")
+        preds["gradient_boost"] = {"thresh": (gb_prob > cutoff).astype("int"), "prob": gb_prob}
         nn_prob = nn.predict_proba(X_test)[:, 1]
-        preds["neural_net"] = (nn_prob > cutoff).astype("int")
+        preds["neural_net"] = {"thresh": (nn_prob > cutoff).astype("int"), "prob": nn_prob}
 
         # calculate scores for each model
         scores = {}
-        for name, y_hat in preds.items():
+        for name, res_dict in preds.items():
             metrics = {}
             # scores
+            y_hat = res_dict["thresh"]
             metrics["accuracy"] = accuracy_score(y_test, y_hat)
             metrics["precision"] = precision_score(y_test, y_hat)
             metrics["recall"] = recall_score(y_test, y_hat)
             metrics["f1"] = f1_score(y_test, y_hat)
             metrics["passes_naive_test"] = metrics["accuracy"] > naive_stat
-            metrics["roc_auc"] = roc_auc_score(y_test, y_hat)
+            metrics["roc_auc"] = roc_auc_score(y_test, res_dict["prob"])
             # confusion matrix
             tn, fp, fn, tp = confusion_matrix(y_test, y_hat, labels=[0, 1]).ravel()
             metrics["true_negatives"] = tn
