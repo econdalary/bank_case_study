@@ -6,7 +6,7 @@ from pprint import pprint
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import MinMaxScaler
@@ -82,6 +82,7 @@ def main():
 
     # predict on dataset
     naive_stat = (y_test == 0).sum() / y_test.count()
+    print(f"Naive rule (baseline accuracy) = {naive_stat}")
     cutoff_scores = {}
     for cutoff in PRED_CUTOFFS:
         preds = {}
@@ -100,6 +101,7 @@ def main():
             metrics["recall"] = recall_score(y_test, y_hat)
             metrics["f1"] = f1_score(y_test, y_hat)
             metrics["passes_naive_test"] = metrics["accuracy"] > naive_stat
+            metrics["roc_auc"] = roc_auc_score(y_test, y_hat)
             # confusion matrix
             tn, fp, fn, tp = confusion_matrix(y_test, y_hat, labels=[0, 1]).ravel()
             metrics["true_negatives"] = tn
